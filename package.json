@@ -33,12 +33,10 @@
     "cheerio": "1.0.0",
     "g-i-s": "^2.1.7",
     "mfiredlcore-vihangayt": "^1.0.0",
-    "@bochilteam/scraper": "latest",
     "@sl-code-lords/si-subdl": "^1.1.1",
     "@sl-code-lords/esana-news": "latest",
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@blackamda/telegram-image-url": "^1.0.0",
-    "youtubedl-core": "^4.11.5",
     "moment-timezone": "latest"
   }
 }
