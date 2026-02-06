@@ -28,9 +28,16 @@ XENO MD V2 is a lightweight, efficient, and user-friendly WhatsApp bot built wit
 
 ## 🚀 Deployment
 
-### Method 1: Render / Koyeb / Heroku (Headless)
+### Method 1: Deploy on Cloud (Render / Katabump / Koyeb)
+
+#### ⚡ Quick Deploy
+
+[![Deploy to Katabump](https://img.shields.io/badge/Deploy%20on-Katabump-blue?style=for-the-badge&logo=serverless)](https://katabump.com/deploy?url=https://github.com/XENO-XD/XENO-MD-V2)
+[![Deploy to Render](https://img.shields.io/badge/Deploy%20on-Render-green?style=for-the-badge&logo=render)](https://render.com/deploy?repo=https://github.com/XENO-XD/XENO-MD-V2)
+
+**Steps:**
 1. Fork this repository.
-2. Deploy to your preferred platform.
+2. Click one of the buttons above (or manually deploy on your platform).
 3. Check the **Console Logs** securely during the first startup.
 4. The bot will display a **Pairing Code** (e.g., `1234-5678`).
 5. Open WhatsApp > Linked Devices > Link a Device > Link with phone number.
