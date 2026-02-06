@@ -242,7 +242,7 @@ app.get("/pair", (req, res) => {
 });
 
 app.get("/code", async (req, res) => {
-  const { state, saveCreds } = await useMultiFileAuthState('./temp_session_auth');
+  const { state, saveCreds } = await useMultiFileAuthState('./auth_info_baileys');
   try {
     let phoneNumber = req.query.number;
     if (!phoneNumber) return res.status(400).json({ error: "Phone number required" });
@@ -267,7 +267,7 @@ app.get("/code", async (req, res) => {
     sock.ev.on("connection.update", async (update) => {
       const { connection } = update;
       if (connection === "open") {
-        console.log("Temp Session Connected!");
+        console.log("Pairing Successful! Connected.");
         await new Promise(r => setTimeout(r, 1000));
 
         // Upload to Mega
@@ -280,39 +280,32 @@ app.get("/code", async (req, res) => {
 
           storage.on('ready', async () => {
             console.log('Mega Connected');
-            const creds = fs.readFileSync("./temp_session_auth/creds.json");
+            const creds = fs.readFileSync("./auth_info_baileys/creds.json");
 
             storage.upload('session.json', creds, (err, file) => {
               if (err) {
                 console.error('Mega Upload Error:', err);
-                return sock.sendMessage(sock.user.id, { text: 'Failed to upload session to Mega.' });
+                // Even if upload fails, we are connected locally, so proceed.
+              } else {
+                file.link(async (err, link) => {
+                  if (!err) {
+                    const sessionID = link.replace('https://mega.nz/file/', '');
+                    const msg = `*XENO-MD SESSION ID*\n\n${sessionID}\n\n*⚠️ IMPORTANT:*\n1. Copy this Session ID.\n2. Go to Render Dashboard > Environment.\n3. Add 'SESSION_ID' with this value.\n4. This ensures your bot stays connected after restarts.`;
+                    await sock.sendMessage(sock.user.id, { text: msg });
+                  }
+                });
               }
-
-              file.link(async (err, link) => {
-                if (err) {
-                  console.error('Mega Link Error:', err);
-                  return sock.sendMessage(sock.user.id, { text: 'Failed to generate Mega link.' });
-                }
-
-                const sessionID = link.replace('https://mega.nz/file/', '');
-                const msg = `*XENO-MD SESSION ID*\n\n${sessionID}\n\n*⚠️ This is your Session ID. It has been saved to your Mega account.*`;
-
-                await sock.sendMessage(sock.user.id, { text: msg });
-
-                await new Promise(r => setTimeout(r, 5000));
-                await sock.end();
-                fs.rmSync("./temp_session_auth", { recursive: true, force: true });
-              });
             });
           });
-
-          storage.on('error', (err) => {
-            console.error('Mega Login Error:', err);
-          });
-
         } catch (megaIsues) {
           console.error(megaIsues);
         }
+
+        // Start the main bot logic
+        await new Promise(r => setTimeout(r, 3000));
+        await sock.end(); // Close pairing socket
+        console.log("Starting Main Bot...");
+        connectToWA(); // Start main function with the new creds
       }
     });
 
