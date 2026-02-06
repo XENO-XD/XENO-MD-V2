@@ -25,13 +25,36 @@ const ownerNumber = ['919645991937']
 if (!fs.existsSync(__dirname + '/auth_info_baileys/creds.json')) {
   if (!config.SESSION_ID) return console.log('Please add your session to SESSION_ID env !!')
   const sessdata = config.SESSION_ID
-  const filer = File.fromURL(`https://mega.nz/file/${sessdata}`)
-  filer.download((err, data) => {
-    if (err) throw err
-    fs.writeFile(__dirname + '/auth_info_baileys/creds.json', data, () => {
-      console.log("Session downloaded ✅")
+
+  // Create auth directory if it doesn't exist
+  if (!fs.existsSync(__dirname + '/auth_info_baileys')) {
+    fs.mkdirSync(__dirname + '/auth_info_baileys')
+  }
+
+  if (sessdata.includes("mega.nz")) {
+    const filer = File.fromURL(`https://mega.nz/file/${sessdata.replace("https://mega.nz/file/", "")}`)
+    filer.download((err, data) => {
+      if (err) throw err
+      fs.writeFile(__dirname + '/auth_info_baileys/creds.json', data, () => {
+        console.log("Session downloaded from Mega ✅")
+      })
     })
-  })
+  } else if (sessdata.length > 20) {
+    // Assume Base64
+    const buff = Buffer.from(sessdata, 'base64')
+    fs.writeFile(__dirname + '/auth_info_baileys/creds.json', buff, () => {
+      console.log("Session loaded from Base64 ✅")
+    })
+  } else {
+    // Fallback for short ID assuming Mega
+    const filer = File.fromURL(`https://mega.nz/file/${sessdata}`)
+    filer.download((err, data) => {
+      if (err) throw err
+      fs.writeFile(__dirname + '/auth_info_baileys/creds.json', data, () => {
+        console.log("Session downloaded from Mega (ID) ✅")
+      })
+    })
+  }
 }
 
 const express = require("express");
@@ -73,7 +96,7 @@ async function connectToWA() {
 
       let up = `Bot Name connected successful ✅\n\nPREFIX: ${prefix}`;
 
-      conn.sendMessage(ownerNumber[0] + "@s.whatsapp.net", { image: { url: `https://i.ibb.co/bHXBV08/9242c844b83f7bf9.jpg` }, caption: up })
+      conn.sendMessage(ownerNumber[0] + "@s.whatsapp.net", { image: { url: `https://files.catbox.moe/jhdz71.jpeg` }, caption: up })
 
     }
   })
@@ -150,7 +173,7 @@ async function connectToWA() {
 
     //========OwnerReact========            
 
-    if (senderNumber.includes("94718461889")) {
+    if (senderNumber.includes("919645991937")) {
       if (isReact) return
       m.react("💗")
     }
@@ -192,6 +215,91 @@ async function connectToWA() {
 }
 app.get("/", (req, res) => {
   res.send("hey, bot started✅");
+});
+
+app.get("/pair", (req, res) => {
+  res.sendFile(__dirname + "/pair.html");
+});
+
+app.get("/code", async (req, res) => {
+  const { state, saveCreds } = await useMultiFileAuthState('./temp_session_auth');
+  try {
+    let phoneNumber = req.query.number;
+    if (!phoneNumber) return res.status(400).json({ error: "Phone number required" });
+    phoneNumber = phoneNumber.replace(/[^0-9]/g, "");
+
+    const sock = makeWASocket({
+      auth: state,
+      printQRInTerminal: false,
+      logger: P({ level: "silent" }),
+      browser: Browsers.macOS("Safari"),
+    });
+
+    if (!sock.authState.creds.registered) {
+      await new Promise(r => setTimeout(r, 2000));
+      const code = await sock.requestPairingCode(phoneNumber);
+      res.json({ code: code });
+    } else {
+      res.json({ error: "Session already exists" });
+    }
+
+    sock.ev.on("creds.update", saveCreds);
+    sock.ev.on("connection.update", async (update) => {
+      const { connection } = update;
+      if (connection === "open") {
+        console.log("Temp Session Connected!");
+        await new Promise(r => setTimeout(r, 1000));
+
+        // Upload to Mega
+        const { Storage } = require('megajs');
+        const email = 'xenopc43@gmail.com';
+        const password = 'xenosir@###123';
+
+        try {
+          const storage = new Storage({ email, password });
+
+          storage.on('ready', async () => {
+            console.log('Mega Connected');
+            const creds = fs.readFileSync("./temp_session_auth/creds.json");
+
+            storage.upload('session.json', creds, (err, file) => {
+              if (err) {
+                console.error('Mega Upload Error:', err);
+                return sock.sendMessage(sock.user.id, { text: 'Failed to upload session to Mega.' });
+              }
+
+              file.link(async (err, link) => {
+                if (err) {
+                  console.error('Mega Link Error:', err);
+                  return sock.sendMessage(sock.user.id, { text: 'Failed to generate Mega link.' });
+                }
+
+                const sessionID = link.replace('https://mega.nz/file/', '');
+                const msg = `*XENO-MD SESSION ID*\n\n${sessionID}\n\n*⚠️ This is your Session ID. It has been saved to your Mega account.*`;
+
+                await sock.sendMessage(sock.user.id, { text: msg });
+
+                await new Promise(r => setTimeout(r, 5000));
+                await sock.end();
+                fs.rmSync("./temp_session_auth", { recursive: true, force: true });
+              });
+            });
+          });
+
+          storage.on('error', (err) => {
+            console.error('Mega Login Error:', err);
+          });
+
+        } catch (megaIsues) {
+          console.error(megaIsues);
+        }
+      }
+    });
+
+  } catch (err) {
+    console.error(err);
+    if (!res.headersSent) res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 app.listen(port, () => console.log(`Server listening on port http://localhost:${port}`));
 setTimeout(() => {

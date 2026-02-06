@@ -1,21 +1,21 @@
 const config = require('../config')
-const {cmd , commands} = require('../command')
+const { cmd, commands } = require('../command')
 const os = require("os")
-const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson} = require('../lib/functions')
+const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson } = require('../lib/functions')
 cmd({
     pattern: "alive",
     desc: "Check bot online or no.",
     category: "main",
     filename: __filename
 },
-async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-return await conn.sendMessage(from,{image: {url: config.ALIVE_IMG},caption: config.ALIVE_MSG},{quoted: mek})
-}catch(e){
-console.log(e)
-reply(`${e}`)
-}
-})
+    async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+        try {
+            return await conn.sendMessage(from, { image: { url: config.ALIVE_IMG }, caption: config.ALIVE_MSG }, { quoted: mek })
+        } catch (e) {
+            console.log(e)
+            reply(`${e}`)
+        }
+    })
 
 //============ping=======
 cmd({
@@ -27,17 +27,17 @@ cmd({
     use: '.ping',
     filename: __filename
 },
-async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-var inital = new Date().getTime();
-let ping = await conn.sendMessage(from , { text: '```Pinging To index.js!!!```'  }, { quoted: mek } )
-var final = new Date().getTime();
-return await conn.edit(ping, '*Pong*\n *' + (final - inital) + ' ms* ' )
-} catch (e) {
-reply(`${e}`)
-console.log(e)
-}
-})
+    async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+        try {
+            var inital = new Date().getTime();
+            let ping = await conn.sendMessage(from, { text: '```Pinging To index.js!!!```' }, { quoted: mek })
+            var final = new Date().getTime();
+            return await conn.edit(ping, '*Pong*\n *' + (final - inital) + ' ms* ')
+        } catch (e) {
+            reply(`${e}`)
+            console.log(e)
+        }
+    })
 
 //===========menu========
 cmd({
@@ -47,37 +47,37 @@ cmd({
     category: "main",
     filename: __filename
 },
-async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-    
-let menu = {
-main: '',
-download: '',
-group: '',
-owner: '',
-convert: '',
-ai: '',
-tools: '',
-search: '',
-fun: '',
-voice: '',
-other: ''
-};
+    async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+        try {
 
-for (let i = 0; i < commands.length; i++) {
-if (commands[i].pattern && !commands[i].dontAddCommandList) {
-menu[commands[i].category] += `.${commands[i].pattern}\n`;
- }
-}
+            let menu = {
+                main: '',
+                download: '',
+                group: '',
+                owner: '',
+                convert: '',
+                ai: '',
+                tools: '',
+                search: '',
+                fun: '',
+                voice: '',
+                other: ''
+            };
 
-let madeMenu = `
+            for (let i = 0; i < commands.length; i++) {
+                if (commands[i].pattern && !commands[i].dontAddCommandList) {
+                    menu[commands[i].category] += `.${commands[i].pattern}\n`;
+                }
+            }
+
+            let madeMenu = `
 👋 𝐇𝐄𝐋𝐋𝐎, ${pushname}!
 
-✨ 𝗪𝗲𝗹𝗰𝗼𝗺𝗲 𝘁𝗼 your bot name ✨ 
+✨ 𝗪𝗲𝗹𝗰𝗼𝗺𝗲 𝘁𝗼 *XENO MD*✨ 
 ╭─「 ᴄᴏᴍᴍᴀɴᴅꜱ ᴘᴀɴᴇʟ」
 │◈ яυηтιмє * ${runtime(process.uptime())}
-│◈ σωηєя ηαмє * your name
-│◈ σωηєя ηυмвєя * your number 
+│◈ σωηєя ηαмє * XENO MD
+│◈ σωηєя ηυмвєя * 919645991937
 ╰──────────●●►
 ╭──────────●●►
  📥 *𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝 𝐌𝐞𝐧𝐮*
@@ -130,11 +130,11 @@ let madeMenu = `
  ${menu.tools}
 ╰───────────●●►
 
-> *©ᴘᴏᴡᴇʀᴇᴅ ʙʏ your bot name*`
+> *©ᴘᴏᴡᴇʀᴇᴅ ʙʏ xᴇɴᴏ sɪʀ*`
 
-return await conn.sendMessage(from,{image: {url: `https://i.ibb.co/bHXBV08/9242c844b83f7bf9.jpg`},caption:madeMenu},{quoted: mek})
-}catch(e){
-console.log(e)
-reply(`𝔼𝕣𝕣𝕣𝕠𝕣`)
-}
-})
+            return await conn.sendMessage(from, { image: { url: `https://files.catbox.moe/jhdz71.jpeg` }, caption: madeMenu }, { quoted: mek })
+        } catch (e) {
+            console.log(e)
+            reply(`𝔼𝕣𝕣𝕣𝕠𝕣`)
+        }
+    })

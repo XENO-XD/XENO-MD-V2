@@ -12,42 +12,42 @@ cmd({
     category: "download",
     filename: __filename
 },
-async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
-    try {
-        if (!q) return reply("Please provide a search query for the image.");
+    async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+        try {
+            if (!q) return reply("Please provide a search query for the image.");
 
-        // Fetch image URLs from Google Custom Search API
-        const searchQuery = encodeURIComponent(q);
-        const url = `https://www.googleapis.com/customsearch/v1?q=${searchQuery}&cx=${GOOGLE_CX}&key=${GOOGLE_API_KEY}&searchType=image&num=5`;
-        
-        const response = await axios.get(url);
-        const data = response.data;
+            // Fetch image URLs from Google Custom Search API
+            const searchQuery = encodeURIComponent(q);
+            const url = `https://www.googleapis.com/customsearch/v1?q=${searchQuery}&cx=${GOOGLE_CX}&key=${GOOGLE_API_KEY}&searchType=image&num=5`;
 
-        if (!data.items || data.items.length === 0) {
-            return reply("No images found for your query.");
-        }
+            const response = await axios.get(url);
+            const data = response.data;
 
-        // Send images
-        for (let i = 0; i < data.items.length; i++) {
-            const imageUrl = data.items[i].link;
+            if (!data.items || data.items.length === 0) {
+                return reply("No images found for your query.");
+            }
 
-            // Download the image
-            const imageResponse = await axios.get(imageUrl, { responseType: 'arraybuffer' });
-            const buffer = Buffer.from(imageResponse.data, 'binary');
+            // Send images
+            for (let i = 0; i < data.items.length; i++) {
+                const imageUrl = data.items[i].link;
 
-            // Send the image with a footer
-            await conn.sendMessage(from, {
-                image: buffer,
-                caption: `
+                // Download the image
+                const imageResponse = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+                const buffer = Buffer.from(imageResponse.data, 'binary');
+
+                // Send the image with a footer
+                await conn.sendMessage(from, {
+                    image: buffer,
+                    caption: `
 🌟 *Image ${i + 1} from your search!* 🌟
         *Enjoy these images! 📸*
-> ᴘᴀᴡᴇʀᴇᴅ ʙʏ ꜱᴜᴘᴜɴ ᴍᴅ
+> ᴘᴀᴡᴇʀᴇᴅ ʙʏ xᴇɴᴏ ᴍᴅ
 `
-}, { quoted: mek });
-}
+                }, { quoted: mek });
+            }
 
-    } catch (e) {
-        console.error(e);
-        reply(`Error: ${e.message}`);
-    }
-});
+        } catch (e) {
+            console.error(e);
+            reply(`Error: ${e.message}`);
+        }
+    });

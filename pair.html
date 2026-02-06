@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Device - XENO XD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00ff88;
+            --secondary: #00b8ff;
+            --bg-dark: #0f0f13;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(0, 255, 136, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 184, 255, 0.15) 0%, transparent 40%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated Background Particles */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            animation: float 20s infinite alternate;
+        }
+
+        .orb-1 {
+            width: 300px;
+            height: 300px;
+            background: rgba(0, 255, 136, 0.2);
+            top: -50px;
+            left: -50px;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: rgba(0, 184, 255, 0.2);
+            bottom: -100px;
+            right: -100px;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            100% {
+                transform: translate(30px, 50px);
+            }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #fff 0%, #aaa 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            color: #8892b0;
+            margin-bottom: 2.5rem;
+            font-size: 0.95rem;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            color: #8892b0;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+            margin-left: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .phone-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .phone-input-wrapper i {
+            position: absolute;
+            left: 1.2rem;
+            color: #8892b0;
+            transition: color 0.3s;
+        }
+
+        input[type="tel"] {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1rem 1rem 1rem 3rem;
+            color: white;
+            font-size: 1.1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input[type="tel"]:focus {
+            border-color: var(--primary);
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.1);
+        }
+
+        input[type="tel"]:focus+i {
+            color: var(--primary);
+        }
+
+        .btn-main {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #000;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .btn-main:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+        }
+
+        .btn-main:active {
+            transform: scale(0.98);
+        }
+
+        .btn-main::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: 0.5s;
+        }
+
+        .btn-main:hover::after {
+            left: 100%;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: none;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            border-top-color: #000;
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Result Area */
+        #code-display {
+            margin-top: 2rem;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .code-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            position: relative;
+            cursor: pointer;
+            user-select: all;
+        }
+
+        .code-box:hover::after {
+            content: 'Click to Copy';
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            letter-spacing: 0;
+            pointer-events: none;
+        }
+
+        .instruction {
+            font-size: 0.85rem;
+            color: #8892b0;
+            line-height: 1.5;
+        }
+
+        .waiting-text {
+            color: var(--secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="container">
+        <div class="glass-card">
+            <h1>XENO XD</h1>
+            <p class="subtitle">Bot Pairing Assistant</p>
+
+            <div class="input-group">
+                <label for="number">WhatsApp Number</label>
+                <div class="phone-input-wrapper">
+                    <i class="fas fa-phone"></i>
+                    <input type="tel" id="number" placeholder="e.g. 919876543210">
+                </div>
+            </div>
+
+            <button class="btn-main" id="submit-btn" onclick="getPairingCode()">
+                <span id="btn-text">Get Pairing Code</span>
+                <div class="spinner" id="loading-spinner"></div>
+            </button>
+            <p class="waiting-text" id="waiting-msg">Initializing secure connection...</p>
+
+            <div id="code-display">
+                <div class="code-box" id="code-box" onclick="copyCode()"></div>
+                <p class="instruction" id="instructions">
+                    Open WhatsApp > Linked Devices > Link a Device > Link with phone number instead.<br>
+                    Enter the code above.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function getPairingCode() {
+            const numberInput = document.getElementById('number');
+            const number = numberInput.value.replace(/[^0-9]/g, '');
+            const btn = document.getElementById('submit-btn');
+            const btnText = document.getElementById('btn-text');
+            const spinner = document.getElementById('loading-spinner');
+            const waitingMsg = document.getElementById('waiting-msg');
+            const codeDisplay = document.getElementById('code-display');
+            const codeBox = document.getElementById('code-box');
+
+            if (!number) {
+                alert('Please enter your phone number with country code (e.g. 919876543210)');
+                return;
+            }
+
+            // Reset UI
+            codeDisplay.style.display = 'none';
+            btnText.style.display = 'none';
+            spinner.style.display = 'block';
+            waitingMsg.style.display = 'block';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(`/code?number=${number}`);
+                const data = await response.json();
+
+                if (data.code) {
+                    codeBox.textContent = data.code;
+                    codeDisplay.style.display = 'block';
+                    waitingMsg.style.display = 'none';
+                } else {
+                    alert('Error: ' + (data.error || 'Failed to generate code'));
+                    waitingMsg.style.display = 'none';
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Failed to connect to server');
+                waitingMsg.style.display = 'none';
+            } finally {
+                spinner.style.display = 'none';
+                btnText.style.display = 'block';
+                btn.disabled = false;
+            }
+        }
+
+        function copyCode() {
+            const code = document.getElementById('code-box').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const box = document.getElementById('code-box');
+                const originalBg = box.style.background;
+                box.style.background = 'rgba(0, 255, 136, 0.2)';
+                setTimeout(() => box.style.background = originalBg, 200);
+                alert('Code copied to clipboard!');
+            });
+        }
+    </script>
+</body>
+
+</html>
