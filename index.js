@@ -232,7 +232,7 @@ app.get("/", (req, res) => {
   res.send("hey, bot started✅");
 });
 
-app.use('/', require('./pair')(connectToWA));
+
 app.listen(port, () => console.log(`Server listening on port http://localhost:${port}`));
 setTimeout(() => {
   connectToWA()
