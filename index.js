@@ -243,6 +243,9 @@ app.get("/code", async (req, res) => {
     if (!phoneNumber) return res.status(400).json({ error: "Phone number required" });
     phoneNumber = phoneNumber.replace(/[^0-9]/g, "");
 
+    // Minimal validation: must be at least 10 digits
+    if (phoneNumber.length < 10) return res.status(400).json({ error: "Invalid phone number length" });
+
     const sock = makeWASocket({
       auth: state,
       printQRInTerminal: false,
