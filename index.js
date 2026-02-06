@@ -22,10 +22,10 @@ const prefix = '.'
 const ownerNumber = ['919645991937']
 
 //===================SESSION-AUTH============================
-if (!fs.existsSync(__dirname + '/auth_info_baileys/creds.json')) {
+if (!fs.existsSync(__dirname + '/session/creds.json')) {
   // Create auth directory if it doesn't exist
-  if (!fs.existsSync(__dirname + '/auth_info_baileys')) {
-    fs.mkdirSync(__dirname + '/auth_info_baileys')
+  if (!fs.existsSync(__dirname + '/session')) {
+    fs.mkdirSync(__dirname + '/session')
   }
 
   // If SESSION_ID is provided, try to download/use it. 
@@ -50,7 +50,7 @@ if (!fs.existsSync(__dirname + '/auth_info_baileys/creds.json')) {
             console.error("Mega Session Download Error:", err);
             return;
           }
-          fs.writeFile(__dirname + '/auth_info_baileys/creds.json', data, () => {
+          fs.writeFile(__dirname + '/session/creds.json', data, () => {
             console.log("Session downloaded from Mega ✅")
           })
         })
@@ -61,7 +61,7 @@ if (!fs.existsSync(__dirname + '/auth_info_baileys/creds.json')) {
       // Base64
       try {
         const buff = Buffer.from(sessdata, 'base64')
-        fs.writeFile(__dirname + '/auth_info_baileys/creds.json', buff, () => {
+        fs.writeFile(__dirname + '/session/creds.json', buff, () => {
           console.log("Session loaded from Base64 ✅")
         })
       } catch (err) { }
@@ -80,7 +80,7 @@ const port = process.env.PORT || 8000;
 
 async function connectToWA() {
   console.log("Connecting wa bot 🧬...");
-  const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/auth_info_baileys/')
+  const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/session/')
   var { version } = await fetchLatestBaileysVersion()
 
   const conn = makeWASocket({
