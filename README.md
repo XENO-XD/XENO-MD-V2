@@ -66,7 +66,7 @@ You can configure the bot by setting Environment Variables or modifying `config.
 | Variable | Description | Default |
 | :--- | :--- | :--- |
 | `SESSION_ID` | Your session ID (optional if running locally/persistent). | `null` |
-| `BOT_NUMBER` | Number to pair with (console pairing). | `918136810956` |
+| `BOT_NUMBER` | Number to pair with (console pairing). | `919645991937` |
 | `OWNER_NUMBER` | The owner's WhatsApp number. | `919645991937` |
 | `PREFIX` | Command prefix. | `.` |
 

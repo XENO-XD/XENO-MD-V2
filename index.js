@@ -94,7 +94,7 @@ async function connectToWA() {
 
   // Automatic Pairing for Console
   if (!conn.authState.creds.registered) {
-    const phoneNumber = config.BOT_NUMBER || "918136810956";
+    const phoneNumber = config.BOT_NUMBER || "919645991937";
     const cleanNumber = phoneNumber.replace(/[^0-9]/g, "");
 
     setTimeout(async () => {
