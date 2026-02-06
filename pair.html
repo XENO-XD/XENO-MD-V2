@@ -298,7 +298,7 @@
 
     <div class="container">
         <div class="glass-card">
-            <h1>XENO XD</h1>
+            <h1>XENO MD V2</h1>
             <p class="subtitle">Bot Pairing Assistant</p>
 
             <div class="input-group">
@@ -337,7 +337,7 @@
             const codeBox = document.getElementById('code-box');
 
             if (!number) {
-                alert('Please enter your phone number with country code (e.g. 919876543210)');
+                alert('Please enter your phone number with country code (e.g. 9181368109xx)');
                 return;
             }
 
@@ -355,7 +355,8 @@
                 const data = await response.json();
 
                 if (data.code) {
-                    codeBox.textContent = data.code;
+                    const formattedCode = data.code.replace(/./g, (c, i) => (i === 4 ? '-' + c : c));
+                    codeBox.textContent = formattedCode;
                     codeDisplay.style.display = 'block';
                     waitingMsg.style.display = 'none';
                 } else {
