@@ -32,7 +32,7 @@ XENO MD V2 is a lightweight, efficient, and user-friendly WhatsApp bot built wit
 
 #### ⚡ Quick Deploy
 
-[![Deploy to Katabump](https://img.shields.io/badge/Deploy%20on-Katabump-blue?style=for-the-badge&logo=serverless)](https://katabump.com/deploy?url=https://github.com/XENO-XD/XENO-MD-V2)
+[![Deploy to Katabump](https://img.shields.io/badge/Deploy%20on-Katabump-blue?style=for-the-badge&logo=serverless)](https://katabump.com)
 [![Deploy to Render](https://img.shields.io/badge/Deploy%20on-Render-green?style=for-the-badge&logo=render)](https://render.com/deploy?repo=https://github.com/XENO-XD/XENO-MD-V2)
 
 **Steps:**
