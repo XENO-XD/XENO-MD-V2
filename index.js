@@ -92,6 +92,22 @@ async function connectToWA() {
     version
   })
 
+  // Automatic Pairing for Console
+  if (!conn.authState.creds.registered) {
+    const phoneNumber = config.BOT_NUMBER || "918136810956";
+    const cleanNumber = phoneNumber.replace(/[^0-9]/g, "");
+
+    setTimeout(async () => {
+      try {
+        let code = await conn.requestPairingCode(cleanNumber);
+        code = code?.match(/.{1,4}/g)?.join("-") || code;
+        console.log(`\n\n====================================================\n\n   YOUR PAIRING CODE:  ${code}\n\n====================================================\n\n`);
+      } catch (err) {
+        console.error("Failed to request pairing code:", err);
+      }
+    }, 4000);
+  }
+
   conn.ev.on('connection.update', (update) => {
     const { connection, lastDisconnect } = update
     if (connection === 'close') {
