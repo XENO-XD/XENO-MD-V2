@@ -23,59 +23,54 @@ const ownerNumber = ['919645991937']
 
 //===================SESSION-AUTH============================
 if (!fs.existsSync(__dirname + '/auth_info_baileys/creds.json')) {
-  if (!config.SESSION_ID) return console.log('Please add your session to SESSION_ID env !!')
-  const sessdata = config.SESSION_ID.trim()
-
   // Create auth directory if it doesn't exist
   if (!fs.existsSync(__dirname + '/auth_info_baileys')) {
     fs.mkdirSync(__dirname + '/auth_info_baileys')
   }
 
-  // Check if it's a Mega URL or ID
-  // Mega links: https://mega.nz/file/ID#KEY
-  // Our IDs: ID#KEY (we stripped the prefix)
+  // If SESSION_ID is provided, try to download/use it. 
+  // Otherwise, wait for pairing.
+  if (config.SESSION_ID) {
+    const sessdata = config.SESSION_ID.trim()
 
-  const isMegaURL = sessdata.includes("mega.nz") || sessdata.includes("mega.co.nz");
-  const isMegaID = sessdata.includes("#");
+    // Check if it's a Mega URL or ID
+    const isMegaURL = sessdata.includes("mega.nz") || sessdata.includes("mega.co.nz");
+    const isMegaID = sessdata.includes("#");
 
-  if (isMegaURL || isMegaID) {
-    let url = sessdata;
-    if (isMegaID && !isMegaURL) {
-      url = `https://mega.nz/file/${sessdata}`;
-    }
+    if (isMegaURL || isMegaID) {
+      let url = sessdata;
+      if (isMegaID && !isMegaURL) {
+        url = `https://mega.nz/file/${sessdata}`;
+      }
 
-    try {
-      const filer = File.fromURL(url);
-      filer.download((err, data) => {
-        if (err) {
-          console.error("Mega Session Download Error:", err);
-          return;
-        }
-        fs.writeFile(__dirname + '/auth_info_baileys/creds.json', data, () => {
-          console.log("Session downloaded from Mega ✅")
+      try {
+        const filer = File.fromURL(url);
+        filer.download((err, data) => {
+          if (err) {
+            console.error("Mega Session Download Error:", err);
+            return;
+          }
+          fs.writeFile(__dirname + '/auth_info_baileys/creds.json', data, () => {
+            console.log("Session downloaded from Mega ✅")
+          })
         })
-      })
-    } catch (err) {
-      console.error("Mega Session Error:", err.message);
-      console.log("If using Mega, ensure format is: https://mega.nz/file/ID#KEY or ID#KEY");
-    }
-  } else if (sessdata.length > 20) {
-    // Assume Base64 encoded content
-    try {
-      const buff = Buffer.from(sessdata, 'base64')
-      fs.writeFile(__dirname + '/auth_info_baileys/creds.json', buff, () => {
-        console.log("Session loaded from Base64 ✅")
-      })
-    } catch (err) {
-      console.error("Base64 Session Error:", err);
+      } catch (err) {
+        console.error("Mega Session Error:", err.message);
+      }
+    } else if (sessdata.length > 20) {
+      // Base64
+      try {
+        const buff = Buffer.from(sessdata, 'base64')
+        fs.writeFile(__dirname + '/auth_info_baileys/creds.json', buff, () => {
+          console.log("Session loaded from Base64 ✅")
+        })
+      } catch (err) { }
     }
   } else {
-    console.log(`Checking session ID... Length: ${sessdata.length}`);
-    if (sessdata.length < 20) {
-      console.log("Session ID too short to be valid.");
-    }
+    console.log("No SESSION_ID found. Connect using the /pair endpoint.");
   }
 }
+
 
 const express = require("express");
 const app = express();
